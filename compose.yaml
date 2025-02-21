@@ -1,0 +1,9 @@
+services:
+  postgres:
+    image: 'postgres:latest'
+    environment:
+      - 'POSTGRES_DB=tasklydatabase'
+      - 'POSTGRES_PASSWORD=081021'
+      - 'POSTGRES_USER=hcodes'
+    ports:
+      - '5432:5432'

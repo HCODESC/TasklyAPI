@@ -25,8 +25,6 @@ public class SecurityConfig {
         this.jwtAuthEntryPoint = jwtAuthEntryPoint;
     }
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 

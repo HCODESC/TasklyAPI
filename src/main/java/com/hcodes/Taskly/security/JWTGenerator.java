@@ -5,6 +5,8 @@ import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -18,7 +20,10 @@ import java.util.Date;
 @Component
 public class JWTGenerator {
 
-    private final static SecretKey key = Keys.hmacShaKeyFor(SecurityConstants.JWT_SECRET.getBytes(StandardCharsets.UTF_8));
+
+    @Value("${jwt.secret}")
+    private String keySecret;
+
     public String generateToken(Authentication authentication){
         String username = authentication.getName();
         Date currentDate = new Date();
@@ -28,7 +33,7 @@ public class JWTGenerator {
                 .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(expirationDate)
-                .signWith(key)
+                .signWith(Keys.hmacShaKeyFor(keySecret.getBytes(StandardCharsets.UTF_8)))
                 .compact();
 
         System.out.println("Token generated: " + token);
@@ -38,7 +43,7 @@ public class JWTGenerator {
 
     public String getUsernameFromToken(String token){
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(Keys.hmacShaKeyFor(keySecret.getBytes(StandardCharsets.UTF_8)))
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
@@ -49,7 +54,7 @@ public class JWTGenerator {
         try {
             Jwts
                     .parserBuilder()
-                    .setSigningKey(key)
+                    .setSigningKey(Keys.hmacShaKeyFor(keySecret.getBytes(StandardCharsets.UTF_8)))
                     .build()
                     .parseClaimsJws(token);
             return true;

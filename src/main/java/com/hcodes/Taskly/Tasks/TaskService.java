@@ -2,7 +2,11 @@ package com.hcodes.Taskly.Tasks;
 
 import com.hcodes.Taskly.exceptions.ResourceNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -16,6 +20,12 @@ public class TaskService {
 
     public List<Task> findAll() {
        return taskRepository.findAll();
+    }
+
+    public Page<Task> findAllTaskPaginatedAndSorted(int page, int size, String sortBy, String direction){
+        Sort sort = direction.equalsIgnoreCase(direction) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort); 
+        return taskRepository.findAll(pageable);
     }
 
     public Task findById(Long id) {

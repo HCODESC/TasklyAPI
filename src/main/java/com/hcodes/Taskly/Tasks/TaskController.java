@@ -1,7 +1,10 @@
 package com.hcodes.Taskly.Tasks;
 
 import jakarta.validation.Valid;
+
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,15 +19,23 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("")
-    public List<Task> findAllTasks(){
-        return taskService.findAll();
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<Task>> getPaginatedTasks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+        
+        Page<Task> pagedTasks = taskService.findAllTaskPaginatedAndSorted(page, size, sortBy, direction);
+        return ResponseEntity.ok(pagedTasks);
     }
 
     @GetMapping("/{id}")
     public Task findOneTask(@PathVariable Long id) {
         return taskService.findById(id);
     }
+
+    
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")

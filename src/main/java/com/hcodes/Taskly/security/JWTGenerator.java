@@ -20,7 +20,6 @@ import java.util.Date;
 @Component
 public class JWTGenerator {
 
-
     @Value("${jwt.secret}")
     private String keySecret;
 

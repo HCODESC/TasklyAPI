@@ -1,7 +1,6 @@
 package com.hcodes.Taskly.dtos;
 
 import com.hcodes.Taskly.Tasks.TaskStatus;
-import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
